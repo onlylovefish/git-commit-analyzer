@@ -44,7 +44,6 @@ export function getGitDiff(): GitDiffInfo {
         deletedLines = parseInt(match[2]);
       }
     }
-
     // 获取文件列表
     const modifiedFiles = execSync('git diff --cached --name-only', {
       encoding: 'utf-8',

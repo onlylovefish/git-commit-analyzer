@@ -9,7 +9,7 @@ const {
 } = require('../dist/utils/gitAnalyzer.js')
 
 const {
-    updateChangeLog, createCommitRecord
+    updateChangelog, createCommitRecord
 } = require('../dist/utils/readmeUpdater.js');
 const { get } = require('http');
 const { queryFridayRes } = require('../dist/axios/index.js');
@@ -106,13 +106,14 @@ async function autoCommit() {
             console.log('✅ 所有变更已添加到暂存区');
         }
 
-        console.log(`📝 当前分支: ${gitStatus.currentBranch}`);
+        console.log(`📝 当前分支: ${gitStatus.branch}`);
         console.log(`🔀 上次提交: ${gitStatus.lastCommit}\n`);
 
         // 分析变更
         console.log('🔍 正在分析变更...');
         const diffInfo=getGitDiff();
         const analysis=analyzeFileChanges(diffInfo);
+        
         console.log('✅ 变更分析完成.\n');
         const commitAnalysis=generateCommitMessage(diffInfo,analysis);
         // 调用 Friday 分析
@@ -122,9 +123,9 @@ async function autoCommit() {
         const commitMessage=cleanFridayAnalysis?`${commitAnalysis.suggestedMessage?.replace(/^[^:]+:\s*/, '')}\n\nFriday分析结果:\n${cleanFridayAnalysis}`:commitAnalysis.suggestedMessage;
         // 分析显示结果
         console.log("🧾 变更统计：");
-        console.log(`  - 新增文件: ${analysis.addedFiles}行`);
-        console.log(`  - 修改文件: ${analysis.modifiedFiles}行`);
-        console.log(`  - 删除文件: ${analysis.deletedFiles}行\n`);
+        console.log(`  - 新增文件: ${diffInfo.addedFiles}行`);
+        console.log(`  - 修改文件: ${diffInfo.modifiedFiles}行`);
+        console.log(`  - 删除文件: ${diffInfo.deletedFiles}行\n`);
         console.log(` 文件：${diffInfo.modifiedFiles.length
             +diffInfo.addedFiles.length
             +diffInfo.deletedFiles.length}个\n`);
@@ -156,7 +157,7 @@ async function autoCommit() {
                 added:diffInfo.addedFiles,
                 deleted:diffInfo.deletedFiles
             });
-            const changelogPath = updateChangeLog(commitRecord);
+            const changelogPath = updateChangelog(commitRecord);
             console.log(`✅ README.md中的变更日志已更新.${changelogPath}\n`);
             // 将changelog加入暂存区
             const addChangelogResult=executeGitCommand(`git add ${changelogPath}`, '将变更日志添加到暂存区');

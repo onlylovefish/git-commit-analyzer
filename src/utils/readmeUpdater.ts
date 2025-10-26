@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 
-import { join } from 'path';
+import path from 'path';
+const join = path.join;
 
 interface CommitRecord {
   timestamp: string;
@@ -166,7 +167,7 @@ function generateCommitRecordMarkdown(record: CommitRecord): string {
     - **修改文件：** ${changes.modifiedFiles} 个
     - **新增文件：** ${changes.addedFiles} 个
     - **删除文件：** ${changes.deletedFiles} 个
-    - **文件类型：** ${files.fileTypes.join(', ')}
+    - **文件类型：** ${(files.fileTypes || []).join(', ')}
     - **复杂度 ** ${changes.complexity}
     - ** 变更样式：** ${changes.changePattern}
     - ** Friday分析:** ${changes.fridayAnalysis}

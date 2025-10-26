@@ -1,7 +1,4 @@
 import { execSync } from 'child_process';
-import { join } from 'path';
-import { existsSync } from 'fs';
-import { diff } from 'util';
 
 interface GitDiffInfo {
   modifiedFiles: string[];
@@ -54,7 +51,7 @@ export function getGitDiff(): GitDiffInfo {
       .filter((file) => file.length > 0); // 过滤空行
 
     //   获取新增和删除文件
-    const addedFiles = execSync('git diff --cache --name-status', {
+    const addedFiles = execSync('git diff --cached --name-status', {
       encoding: 'utf-8',
       cwd: gitRoot,
     })
@@ -63,7 +60,7 @@ export function getGitDiff(): GitDiffInfo {
       .filter((line) => line.startsWith('A'))
       .map((line) => line.substring(2));
 
-    const deletedFiles = execSync('git diff --cache --name-status', {
+    const deletedFiles = execSync('git diff --cached --name-status', {
       encoding: 'utf-8',
       cwd: gitRoot,
     })

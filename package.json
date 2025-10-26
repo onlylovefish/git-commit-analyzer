@@ -12,8 +12,8 @@
     "bin"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "build":"rm -rf dist && tsup --dts"
   },
   "keywords": [],
   "author": "",
